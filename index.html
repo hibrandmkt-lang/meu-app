@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Primeiro App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --accent: #ff3d2e;
+      --accent-dim: rgba(255, 61, 46, 0.12);
+      --white: #f0ede8;
+      --muted: #5a5a5a;
+      --border: rgba(240, 237, 232, 0.08);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 61, 46, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.6;
+    }
+
+    /* Grid overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(8, 8, 8, 0.7);
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.12em;
+      color: var(--white);
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .nav-badge {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 6px 14px;
+      border-radius: 2px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 140px 48px 80px;
+      z-index: 1;
+    }
+
+    .hero-left {
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    }
+
+    .hero-eyebrow-line {
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-eyebrow-text {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 9vw, 130px);
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+    }
+
+    .hero-title .outline {
+      -webkit-text-stroke: 1.5px var(--white);
+      color: transparent;
+    }
+
+    .hero-title .accent-word {
+      color: var(--accent);
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 0.85em;
+    }
+
+    .hero-subtitle {
+      margin-top: 36px;
+      max-width: 380px;
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--muted);
+      font-weight: 300;
+      animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+
+    .hero-subtitle strong {
+      color: var(--white);
+      font-weight: 400;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 52px;
+      animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+    }
+
+    .btn-primary {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 36px;
+      border: none;
+      border-radius: 2px;
+      cursor: none;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateX(-110%) skewX(-12deg);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary:hover::before {
+      transform: translateX(110%) skewX(-12deg);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-arrow {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-primary:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+
+    .btn-secondary {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: none;
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      color: var(--white);
+    }
+
+    .btn-secondary::before {
+      content: '→';
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-secondary:hover::before {
+      transform: translateX(4px);
+    }
+
+    /* ── HERO RIGHT ── */
+    .hero-right {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+    }
+
+    .hero-visual {
+      position: relative;
+      width: 480px;
+      height: 520px;
+    }
+
+    .visual-card {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .card-main {
+      width: 340px;
+      height: 400px;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .card-main-header {
+      height: 48px;
+      background: var(--accent-dim);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .dot:first-child { background: var(--accent); }
+
+    .card-main-body {
+      padding: 28px;
+    }
+
+    .bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-bottom: 12px;
+    }
+
+    .bar-short { width: 60%; }
+    .bar-medium { width: 80%; }
+    .bar-long { width: 95%; }
+
+    .bar-accent {
+      background: linear-gradient(90deg, var(--accent), rgba(255, 61, 46, 0.3));
+      width: 45%;
+    }
+
+    .chart-area {
+      margin-top: 28px;
+      height: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+    }
+
+    .card-side {
+      width: 160px;
+      height: 180px;
+      top: 0;
+      right: 0;
+      animation: float 6s ease-in-out 1.5s infinite;
+    }
+
+    .card-side-content {
+      padding: 20px;
+    }
+
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .card-bottom {
+      width: 200px;
+      height: 80px;
+      bottom: 0;
+      left: 0;
+      animation: float 6s ease-in-out 3s infinite;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 12px;
+    }
+
+    .avatar-group {
+      display: flex;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+      margin-left: -8px;
+    }
+
+    .avatar:first-child { margin-left: 0; background: #ff6b6b; }
+    .avatar:nth-child(2) { background: #4ecdc4; }
+    .avatar:nth-child(3) { background: #ffe66d; }
+
+    .users-text {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    /* Decorative elements */
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      pointer-events: none;
+    }
+
+    .deco-1 {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      right: -80px;
+      animation: spin 30s linear infinite;
+    }
+
+    .deco-2 {
+      width: 200px;
+      height: 200px;
+      bottom: 40px;
+      left: 20px;
+      animation: spin 20s linear infinite reverse;
+    }
+
+    /* ── METRICS ROW ── */
+    .metrics {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .metric-item {
+      padding: 56px 48px;
+      border-right: 1px solid var(--border);
+      animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .metric-item:nth-child(1) { animation-delay: 0.7s; }
+    .metric-item:nth-child(2) { animation-delay: 0.85s; }
+    .metric-item:nth-child(3) { animation-delay: 1s; border-right: none; }
+
+    .metric-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    .metric-number sup {
+      font-size: 0.4em;
+      vertical-align: super;
+      color: var(--accent);
+    }
+
+    .metric-label {
+      margin-top: 8px;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .metric-bar {
+      margin-top: 24px;
+      height: 2px;
+      background: var(--border);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .metric-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 1px;
+      transform-origin: left;
+      animation: growWidth 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      position: relative;
+      z-index: 1;
+      padding: 120px 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 80px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 5vw, 72px);
+      line-height: 0.95;
+    }
+
+    .section-count {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 120px;
+      color: var(--border);
+      line-height: 1;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s ease;
+      cursor: none;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent-dim);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1) rotate(-5deg);
+      color: var(--accent);
+    }
+
+    .feature-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 24px;
+      display: block;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+    }
+
+    .feature-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      font-style: italic;
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      position: relative;
+      z-index: 1;
+      margin: 0 48px 80px;
+      background: var(--accent);
+      padding: 80px;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: 'APP';
+      position: absolute;
+      right: -40px;
+      top: -60px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 320px;
+      color: rgba(255, 255, 255, 0.06);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cta-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cta-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 6vw, 88px);
+      line-height: 0.95;
+      color: #fff;
+    }
+
+    .cta-subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 16px;
+      font-weight: 300;
+      max-width: 300px;
+    }
+
+    .btn-cta-white {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 20px 44px;
+      border-radius: 2px;
+      cursor: none;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-cta-white:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 40px 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-copy {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .card-main { animation: float 6s ease-in-out infinite; }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes growWidth {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .live-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 120px 24px 60px;
+        gap: 60px;
+      }
+
+      .hero-right {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        width: 100%;
+        max-width: 400px;
+        height: 380px;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-item {
+        padding: 40px 24px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .features { padding: 80px 24px; }
+      .features-grid { grid-template-columns: 1fr; gap: 2px; }
+
+      .cta-section { margin: 0 24px 60px; padding: 60px 32px; }
+      .cta-inner { flex-direction: column; gap: 40px; align-items: flex-start; }
+
+      footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">MEU<span>.</span>APP</div>
+    <ul class="nav-links">
+      <li><a href="#">Produto</a></li>
+      <li><a href="#">Recursos</a></li>
+      <li><a href="#">Preços</a></li>
+      <li><a href="#">Docs</a></li>
+    </ul>
+    <div class="nav-badge"><span class="live-dot"></span>v1.0 — beta</div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span class="hero-eyebrow-text">Lançamento 2026</span>
+      </div>
+      <h1 class="hero-title">
+        MEU<br>
+        <span class="accent-word">Primeiro</span><br>
+        <span class="outline">APP</span>
+      </h1>
+      <p class="hero-subtitle">
+        Uma experiência <strong>radicalmente nova</strong> para construir, escalar e entregar produtos digitais que as pessoas realmente amam usar.
+      </p>
+      <div class="hero-cta-group">
+        <a href="#" class="btn-primary">
+          Começar agora
+          <svg class="btn-arrow" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 9H15M15 9L9 3M15 9L9 15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#" class="btn-secondary">Ver demo</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-visual">
+        <!-- Decorative circles -->
+        <div class="deco-circle deco-1"></div>
+        <div class="deco-circle deco-2"></div>
+
+        <!-- Main card -->
+        <div class="visual-card card-main">
+          <div class="card-main-header">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="card-main-body">
+            <div class="bar bar-short"></div>
+            <div class="bar bar-medium"></div>
+            <div class="bar bar-accent"></div>
+            <div class="bar bar-long"></div>
+            <div class="bar bar-short" style="margin-top:20px"></div>
+            <div class="chart-area">
+              <svg class="chart-line" viewBox="0 0 280 100" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#ff3d2e" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#ff3d2e" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,80 C20,70 40,55 70,40 C100,25 120,60 150,45 C180,30 200,15 230,20 C250,23 265,18 280,10" stroke="#ff3d2e" stroke-width="1.5" fill="none"/>
+                <path d="M0,80 C20,70 40,55 70,40 C100,25 120,60 150,45 C180,30 200,15 230,20 C250,23 265,18 280,10 L280,100 L0,100 Z" fill="url(#chartGrad)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side card -->
+        <div class="visual-card card-side">
+          <div class="card-side-content">
+            <div class="stat-number">98<sup>%</sup></div>
+            <div class="stat-label">Satisfação</div>
+          </div>
+        </div>
+
+        <!-- Bottom card -->
+        <div class="visual-card card-bottom">
+          <div class="avatar-group">
+            <div class="avatar"></div>
+            <div class="avatar"></div>
+            <div class="avatar"></div>
+          </div>
+          <div class="users-text">+2.4k usuários</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric-item">
+      <div class="metric-number">10<sup>k+</sup></div>
+      <div class="metric-label">Downloads ativos</div>
+      <div class="metric-bar"><div class="metric-fill" style="width: 78%"></div></div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-number">4.9<sup>★</sup></div>
+      <div class="metric-label">Avaliação média</div>
+      <div class="metric-bar"><div class="metric-fill" style="width: 98%"></div></div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-number">99<sup>%</sup></div>
+      <div class="metric-label">Uptime garantido</div>
+      <div class="metric-bar"><div class="metric-fill" style="width: 99%"></div></div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="section-header">
+      <div>
+        <div class="section-label">O que oferecemos</div>
+        <h2 class="section-title">RECURSOS<br>PODEROSOS</h2>
+      </div>
+      <div class="section-count">03</div>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-num">— 01</div>
+        <span class="feature-icon">⚡</span>
+        <h3 class="feature-title">Performance extrema</h3>
+        <p class="feature-desc">Arquitetura otimizada para entregar resultados em milissegundos. Sem espera, sem fricção.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">— 02</div>
+        <span class="feature-icon">🔒</span>
+        <h3 class="feature-title">Segurança de ponta</h3>
+        <p class="feature-desc">Criptografia de nível bancário e autenticação multifator integrada por padrão.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">— 03</div>
+        <span class="feature-icon">✦</span>
+        <h3 class="feature-title">Escala infinita</h3>
+        <p class="feature-desc">Cresce junto com você — de 10 a 10 milhões de usuários sem reconfigurar nada.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <div class="cta-section">
+    <div class="cta-inner">
+      <div>
+        <h2 class="cta-title">PRONTO<br>PARA<br>COMEÇAR?</h2>
+        <p class="cta-subtitle">Junte-se a milhares de pessoas que já transformaram suas ideias em realidade.</p>
+      </div>
+      <a href="#" class="btn-cta-white">
+        Criar conta grátis
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M3 9H15M15 9L9 3M15 9L9 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">MEU<span>.</span>APP</div>
+    <div class="footer-copy">© 2026 — Todos os direitos reservados</div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Cursor hover effects
+    const interactives = document.querySelectorAll('a, button, .feature-card, .metric-item');
+    interactives.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        ring.style.width = '60px';
+        ring.style.height = '60px';
+        ring.style.borderColor = 'rgba(255, 61, 46, 0.8)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '12px';
+        cursor.style.height = '12px';
+        ring.style.width = '40px';
+        ring.style.height = '40px';
+        ring.style.borderColor = 'rgba(255, 61, 46, 0.5)';
+      });
+    });
+
+    // Scroll-triggered animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = `opacity 0.6s ease ${i * 0.15}s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.15}s, background 0.3s ease`;
+      observer.observe(el);
+    });
+
+    // Counter animation
+    function animateCounter(el, target, suffix = '') {
+      let start = 0;
+      const duration = 1500;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.floor(eased * target);
+        const numEl = el.querySelector('.metric-number');
+        if (numEl) {
+          const sup = numEl.querySelector('sup');
+          numEl.childNodes[0].textContent = value;
+        }
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    const metricObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          metricObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.metric-item').forEach(el => metricObserver.observe(el));
+  </script>
+</body>
+</html>
