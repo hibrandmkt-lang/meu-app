@@ -1,0 +1,5 @@
+# Opensquad - private browser sessions (never commit)
+_opensquad/_browser_profile/
+
+# Node
+node_modules/
