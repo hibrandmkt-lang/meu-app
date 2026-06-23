@@ -1,0 +1,14 @@
+name: "Pipeline de Conteúdo — John Knox"
+squad: john-knox-content
+version: "1.0"
+
+steps:
+  - step-01-input.md
+  - step-02-analise.md
+  - step-03-editorial.md
+  - step-04-posts.md
+  - step-05-carrossel.md
+  - step-06-html-output.md
+
+checkpoints:
+  - step-01-input.md

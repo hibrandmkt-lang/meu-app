@@ -1,0 +1,21 @@
+{
+  "squad": "john-knox-content",
+  "status": "completed",
+  "step": { "current": 6, "total": 6, "label": "step-06-html-output" },
+  "agents": [
+    { "id": "teologo-analista", "name": "Teólogo Analista", "icon": "📖", "status": "done", "desk": { "col": 1, "row": 1 } },
+    { "id": "estrategista-editorial", "name": "Estrategista Editorial", "icon": "🎯", "status": "done", "desk": { "col": 2, "row": 1 } },
+    { "id": "redator-de-posts", "name": "Redator de Posts", "icon": "✍️", "status": "done", "desk": { "col": 3, "row": 1 } },
+    { "id": "arquiteto-de-carrossel", "name": "Arquiteto de Carrossel", "icon": "🎠", "status": "done", "desk": { "col": 1, "row": 2 } },
+    { "id": "compilador-html", "name": "Compilador HTML", "icon": "🖥️", "status": "done", "desk": { "col": 2, "row": 2 } }
+  ],
+  "handoff": {
+    "from": "compilador-html",
+    "to": null,
+    "message": "HTML gerado com 2041 linhas — 6 seções, 8 posts com botão copiar, 3 carrosséis, 10 citações.",
+    "completedAt": "2026-04-19T23:42:00.000Z"
+  },
+  "startedAt": "2026-04-19T23:27:34.000Z",
+  "completedAt": "2026-04-19T23:42:00.000Z",
+  "updatedAt": "2026-04-19T23:42:00.000Z"
+}

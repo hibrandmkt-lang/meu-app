@@ -1,0 +1,13 @@
+name: "Pipeline de Shorts — Eliane Lima"
+squad: eliane-lima-shorts
+version: "3.0"
+
+steps:
+  - step-01-input.md
+  - step-02-extraction.md
+  - step-03-cutting.md
+  - step-04-scripts.md
+  - step-05-calendar.md
+
+checkpoints:
+  - step-01-input.md

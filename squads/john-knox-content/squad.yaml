@@ -1,0 +1,31 @@
+name: "John Knox Content"
+code: john-knox-content
+description: "Transforma textos das aulas dominicais do John Knox (ministradas pelos pastores) em conteúdo completo para redes sociais. Entrega: análise teológica, linha editorial, posts prontos, carrosséis e compilação HTML."
+version: "1.0"
+created: "2026-04-19"
+
+domain: content
+language: pt-BR
+
+target_formats:
+  - instagram-feed
+  - instagram-carousel
+  - instagram-stories
+  - facebook
+  - threads
+
+output:
+  format: html
+  path: /Users/walmirjunior/aios-core/Suporte/output/
+
+skills:
+  - file_write
+
+data:
+  - pipeline/data/tom-de-voz.md
+  - pipeline/data/pilares-editoriais.md
+  - pipeline/data/estrutura-carrossel.md
+  - pipeline/data/html-template.md
+
+pipeline: pipeline/pipeline.yaml
+party: squad-party.csv

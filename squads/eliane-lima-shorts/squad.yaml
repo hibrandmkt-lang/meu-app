@@ -1,0 +1,35 @@
+name: "Eliane Lima Shorts"
+code: eliane-lima-shorts
+description: "Transforma vídeos longos do canal Bellolhar (jato de plasma) em YouTube Shorts para o canal da especialista Eliane Lima. Pipeline completo: seleção de clips → roteiros → calendário de publicação."
+version: "1.0"
+created: "2026-04-18"
+
+domain: content
+language: pt-BR
+
+target_formats:
+  - youtube-shorts
+
+cadence:
+  frequency: 3x/semana
+  days: [segunda, quarta, sexta]
+  time: "09:00"
+
+channels:
+  source: "Bellolhar (YouTube — vídeos longos)"
+  destination: "Eliane Lima (YouTube Shorts)"
+
+skills:
+  - web_search
+  - web_fetch
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+
+pipeline: pipeline/pipeline.yaml
+party: squad-party.csv

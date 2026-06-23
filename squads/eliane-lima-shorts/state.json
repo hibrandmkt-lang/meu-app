@@ -1,0 +1,20 @@
+{
+  "squad": "eliane-lima-shorts",
+  "status": "done",
+  "step": { "current": 5, "total": 5, "label": "done" },
+  "agents": [
+    { "id": "extrator-elite", "name": "Extrator Elite", "icon": "✂️", "status": "done", "desk": { "col": 1, "row": 1 } },
+    { "id": "cortador-automatico", "name": "Cortador Automático", "icon": "🎞️", "status": "done", "desk": { "col": 2, "row": 1 } },
+    { "id": "roteirista-rapido", "name": "Roteirista Rápido", "icon": "🎬", "status": "done", "desk": { "col": 3, "row": 1 } },
+    { "id": "publicador-planejado", "name": "Publicador Planejado", "icon": "📅", "status": "done", "desk": { "col": 1, "row": 2 } }
+  ],
+  "run": {
+    "id": "2026-04-18-180255",
+    "outputDir": "squads/eliane-lima-shorts/output/2026-04-18-180255",
+    "videoUrl": "https://www.youtube.com/watch?v=iajne5yb9Zc"
+  },
+  "handoff": null,
+  "startedAt": "2026-04-18T18:02:55Z",
+  "completedAt": "2026-04-18T21:25:00Z",
+  "updatedAt": "2026-04-18T21:25:00Z"
+}

@@ -1,0 +1,5 @@
+id,name,title,icon,execution,path
+extrator-elite,Extrator Elite,Analista de Conteúdo para Shorts,✂️,subagent,./agents/extrator-elite.agent.md
+cortador-automatico,Cortador Automático,Editor de Vídeo Automatizado,🎞️,inline,./agents/cortador-automatico.agent.md
+roteirista-rapido,Roteirista Rápido,Roteirista de YouTube Shorts,🎬,subagent,./agents/roteirista-rapido.agent.md
+publicador-planejado,Publicador Planejado,Estrategista de Calendário e Publicação,📅,inline,./agents/publicador-planejado.agent.md

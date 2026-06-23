@@ -1,0 +1,6 @@
+id,name,title,icon,execution,path
+teologo-analista,Teólogo Analista,Analista de Conteúdo Teológico,📖,subagent,./agents/teologo-analista.agent.md
+estrategista-editorial,Estrategista Editorial,Estrategista de Conteúdo Digital,🎯,subagent,./agents/estrategista-editorial.agent.md
+redator-de-posts,Redator de Posts,Redator de Conteúdo para Redes Sociais,✍️,subagent,./agents/redator-de-posts.agent.md
+arquiteto-de-carrossel,Arquiteto de Carrossel,Designer de Conteúdo em Carrossel,🎠,subagent,./agents/arquiteto-de-carrossel.agent.md
+compilador-html,Compilador HTML,Gerador de Relatório HTML,🖥️,inline,./agents/compilador-html.agent.md
