@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if ! command -v rtk &>/dev/null; then curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh; fi"
+            "command": "which rtk > /dev/null 2>&1 || curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh"
           }
         ]
       }
