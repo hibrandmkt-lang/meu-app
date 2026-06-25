@@ -31,3 +31,7 @@ Thumbs.db
 .claude/settings.local.json
 .aiox/install-log.txt
 .claude/plugins/nano-banana/scripts/__pycache__/
+*.png
+*.jpg
+*.jpeg
+generated_image.*
