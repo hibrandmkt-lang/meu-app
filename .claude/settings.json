@@ -8,6 +8,10 @@
           {
             "type": "command",
             "command": "which rtk > /dev/null 2>&1 || curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh"
+          },
+          {
+            "type": "command",
+            "command": "pip install -q google-genai python-dotenv Pillow 2>/dev/null || true"
           }
         ]
       }
