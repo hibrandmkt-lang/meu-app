@@ -11,7 +11,7 @@
           },
           {
             "type": "command",
-            "command": "pip install -q google-genai python-dotenv Pillow 2>/dev/null || true"
+            "command": "pip install -q cffi && pip install -q google-genai python-dotenv Pillow --ignore-installed cryptography 2>/dev/null || true"
           }
         ]
       }
