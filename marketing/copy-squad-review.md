@@ -305,9 +305,72 @@ Status: **Rascunho para revisão do chief** — nada aqui foi publicado.
 
 ---
 
+# PARTE 8 — Auditoria técnica do `<head>` (SEO / compartilhamento / tracking)
+
+> Baseada no HTML real do `<head>` da página (coletado em 2026-07-05). Isso importa para ads porque é o que aparece quando o link é compartilhado (WhatsApp, Facebook, X) e o que viabiliza o pixel do Meta.
+
+## 8.1 Problemas encontrados (em ordem de gravidade)
+
+1. **🔴 Vazamento do prompt do builder no Twitter Card.**
+   - `twitter:title` está como **"Lovable App"** e `twitter:description` como **"Cria páginas de vendas persuasivas e responsivas para produtos digitais cristãos."** — isso é a instrução interna usada para gerar a página, exposta publicamente.
+   - Quando alguém compartilhar o link no X/Twitter (e em apps que leem twitter card), o preview vai dizer que a página "cria páginas de vendas persuasivas" — quebra totalmente a confiança do comprador.
+   - Corrigir para os mesmos valores do OG (título e descrição do produto).
+
+2. **🔴 Imagem de compartilhamento é um screenshot automático do Lovable.**
+   - `og:image`/`twitter:image` apontam para um print automático hospedado no R2 do Lovable, com URL de preview interno no nome do arquivo.
+   - Trocar por uma imagem própria 1200×630 px: capa do ebook + headline ("A Bíblia certa muda tudo") + selo "R$ 27 · 7 dias de garantia". Essa imagem é o "anúncio grátis" de todo compartilhamento no WhatsApp.
+
+3. **🔴 Sem Pixel do Meta no head.**
+   - O único tracking presente é o analytics interno do Lovable (`flock.js`). Não há `fbq`/Meta Pixel nem Conversions API.
+   - **Sem pixel não dá para rodar as campanhas da Parte 5**: nada de otimização por compra, nada de remarketing. Instalar o Pixel + eventos (PageView, InitiateCheckout no clique do CTA, Purchase via checkout/CAPI da plataforma de pagamento) antes de gastar R$ 1 em tráfego.
+
+4. **🟡 Domínio `*.lovable.app` e badge do Lovable visível.**
+   - A página roda em subdomínio do Lovable e exibe o badge "Edit with Lovable" fixo no canto — dois sinais de "página amadora" para o comprador e para o Meta.
+   - Recomendação: conectar domínio próprio (ex.: `minhabibliaideal.com.br`) e remover o badge (configuração do plano do Lovable). Domínio próprio também é necessário para verificar o domínio no Business Manager do Meta.
+
+5. **🟡 `meta name="author"` = "Lovable".** Trocar pelo nome da autora — reforça a seção de autoridade (que já está anônima demais, ver Parte 1.2).
+
+## 8.2 O que já está bom no head
+
+- `<title>` correto: "Como Escolher a Bíblia Ideal Para Sua Vida | Ebook".
+- `meta description` boa e vendedora ("Descubra qual Bíblia combina com você...").
+- `og:title` e `og:description` corretos — o problema é só o par twitter:* e a imagem.
+- Fontes (Cormorant Garamond + Inter) com preconnect — ok de performance.
+
+## 8.3 Bloco de meta tags corrigido (pronto para colar no Lovable)
+
+```html
+<title>Como Escolher a Bíblia Ideal Para Sua Vida | Ebook</title>
+<meta name="author" content="[NOME DA AUTORA]">
+<meta name="description" content="Descubra qual Bíblia combina com você e transforme sua leitura bíblica em um hábito simples, constante e prazeroso. Acesso imediato.">
+
+<meta property="og:title" content="Como Escolher a Bíblia Ideal Para Sua Vida">
+<meta property="og:description" content="Método prático para escolher a Bíblia certa e criar constância na leitura da Palavra de Deus.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="[URL DA IMAGEM PRÓPRIA 1200x630]">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Como Escolher a Bíblia Ideal Para Sua Vida">
+<meta name="twitter:description" content="Método prático para escolher a Bíblia certa e criar constância na leitura da Palavra de Deus.">
+<meta name="twitter:image" content="[URL DA IMAGEM PRÓPRIA 1200x630]">
+```
+
+## 8.4 Checklist técnico antes de ligar tráfego
+
+- [ ] Corrigir twitter:title / twitter:description (vazamento do prompt)
+- [ ] Substituir og:image / twitter:image por arte própria 1200×630
+- [ ] Instalar Meta Pixel + evento Purchase (via plataforma de checkout ou CAPI)
+- [ ] Conectar domínio próprio e verificar no Business Manager
+- [ ] Remover badge do Lovable
+- [ ] Trocar meta author para o nome da autora
+- [ ] Testar preview de compartilhamento (WhatsApp + developers.facebook.com/tools/debug)
+
+---
+
 ## Resumo executivo para o chief
 
 - **Melhor ativo de copy:** o reframe "não é falta de fé, é falta de método" — recomendação de eixo central da comunicação.
 - **Prioridade de mídia:** Ads 4.1, 3.1 e 1.1 em conversão aberta; 5.1 e 6.1 em remarketing.
 - **Bloqueadores na página antes de escalar tráfego:** bônus "2" com 1 listado, FAQ vazia, autora e depoimentos sem identificação, falta de ancoragem de preço.
 - **Alavanca de negócio:** order bump de R$ 9,90 no checkout para viabilizar CPA de tráfego frio.
+- **Bloqueadores técnicos (Parte 8):** vazamento do prompt do Lovable no twitter card, imagem de compartilhamento automática, **ausência de Meta Pixel** (impede qualquer campanha de conversão) e domínio/badge do Lovable. Resolver antes de ligar tráfego.
